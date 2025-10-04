@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Dice Roller</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    .scene {
+      width: 100px;
+      height: 100px;
+      perspective: 600px;
+    }
+    .dice-container {
+      display: flex;
+      gap: 60px;
+      margin-bottom: 30px;
+    }
+    .cube {
+      width: 100px;
+      height: 100px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 1s;
+    }
+    .face {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background: white;
+      border: 2px solid #333;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 48px;
+    }
+    /* Position each face */
+    .front  { transform: rotateY(0deg) translateZ(50px); }
+    .back   { transform: rotateY(180deg) translateZ(50px); }
+    .right  { transform: rotateY(90deg) translateZ(50px); }
+    .left   { transform: rotateY(-90deg) translateZ(50px); }
+    .top    { transform: rotateX(90deg) translateZ(50px); }
+    .bottom { transform: rotateX(-90deg) translateZ(50px); }
+
+    button {
+      padding: 12px 24px;
+      font-size: 18px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 22px;
+    }
+  </style>
+</head>
+<body>
+  <h1>3D Dice Roller</h1>
+
+  <div class="dice-container">
+    <div class="scene"><div id="dice1" class="cube">
+      <div class="face front">⚀</div>
+      <div class="face back">⚅</div>
+      <div class="face right">⚃</div>
+      <div class="face left">⚂</div>
+      <div class="face top">⚁</div>
+      <div class="face bottom">⚄</div>
+    </div></div>
+
+    <div class="scene"><div id="dice2" class="cube">
+      <div class="face front">⚀</div>
+      <div class="face back">⚅</div>
+      <div class="face right">⚃</div>
+      <div class="face left">⚂</div>
+      <div class="face top">⚁</div>
+      <div class="face bottom">⚄</div>
+    </div></div>
+  </div>
+
+  <button onclick="rollDice()">Roll</button>
+  <div class="result" id="resultText">Click Roll to start</div>
+
+  <script>
+    function rollDice() {
+      const dice1 = document.getElementById("dice1");
+      const dice2 = document.getElementById("dice2");
+
+      // random rolls (1–6)
+      const roll1 = Math.floor(Math.random() * 6) + 1;
+      const roll2 = Math.floor(Math.random() * 6) + 1;
+
+      // pick rotations for each face (approximate positions)
+      const rotations = {
+        1: "rotateX(0deg) rotateY(0deg)",     // ⚀ front
+        2: "rotateX(-90deg) rotateY(0deg)",   // ⚁ top
+        3: "rotateY(-90deg) rotateX(0deg)",   // ⚂ left
+        4: "rotateY(90deg) rotateX(0deg)",    // ⚃ right
+        5: "rotateX(90deg) rotateY(0deg)",    // ⚄ bottom
+        6: "rotateY(180deg) rotateX(0deg)"    // ⚅ back
+      };
+
+      // animate to new rotation
+      dice1.style.transform = rotations[roll1] + " rotateZ(" + (360*2) + "deg)";
+      dice2.style.transform = rotations[roll2] + " rotateZ(" + (360*2) + "deg)";
+
+      // update text result after animation
+      setTimeout(() => {
+        document.getElementById("resultText").textContent =
+          `You rolled ${roll1} and ${roll2} (Total: ${roll1 + roll2})`;
+      }, 1000); // matches transition duration
+    }
+  </script>
+</body>
+</html>
+
